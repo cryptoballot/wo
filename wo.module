@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Wikiocracy feature.
+ */
+
+include_once('wo.features.inc');
