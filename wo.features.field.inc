@@ -113,6 +113,11 @@ function wo_field_default_fields() {
           'wo_issue' => 0,
           'wo_proposal' => 'wo_proposal',
         ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
+        ),
       ),
       'translatable' => '1',
       'type' => 'node_reference',
@@ -360,7 +365,7 @@ function wo_field_default_fields() {
           'summary_rows' => 5,
         ),
         'type' => 'text_textarea_with_summary',
-        'weight' => '1',
+        'weight' => '2',
       ),
       'widget_type' => 'text_textarea_with_summary',
     ),
@@ -396,6 +401,11 @@ function wo_field_default_fields() {
           'wo_issue' => 0,
           'wo_proposal' => 0,
           'wo_vote' => 0,
+        ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
         ),
       ),
       'translatable' => '1',
@@ -437,7 +447,7 @@ function wo_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'node_reference_autocomplete',
-        'weight' => '4',
+        'weight' => '5',
       ),
     ),
   );
@@ -472,6 +482,11 @@ function wo_field_default_fields() {
           'wo_issue' => 0,
           'wo_proposal' => 0,
           'wo_vote' => 0,
+        ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
         ),
       ),
       'translatable' => '1',
@@ -513,7 +528,86 @@ function wo_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'node_reference_autocomplete',
-        'weight' => '3',
+        'weight' => '4',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-wo_proposal-field_wo_proposal_issue'
+  $fields['node-wo_proposal-field_wo_proposal_issue'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_wo_proposal_issue',
+      'foreign keys' => array(
+        'nid' => array(
+          'columns' => array(
+            'nid' => 'nid',
+          ),
+          'table' => 'node',
+        ),
+      ),
+      'indexes' => array(
+        'nid' => array(
+          0 => 'nid',
+        ),
+      ),
+      'module' => 'node_reference',
+      'settings' => array(
+        'referenceable_types' => array(
+          'wo_essay' => 0,
+          'wo_issue' => 'wo_issue',
+          'wo_proposal' => 0,
+          'wo_vote' => 0,
+        ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
+        ),
+      ),
+      'translatable' => '0',
+      'type' => 'node_reference',
+    ),
+    'field_instance' => array(
+      'bundle' => 'wo_proposal',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'node_reference',
+          'settings' => array(),
+          'type' => 'node_reference_default',
+          'weight' => 4,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_wo_proposal_issue',
+      'label' => 'Issue',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'node_reference',
+        'settings' => array(
+          'autocomplete_match' => 'contains',
+          'autocomplete_path' => 'node_reference/autocomplete',
+          'size' => '60',
+        ),
+        'type' => 'node_reference_autocomplete',
+        'weight' => '1',
       ),
     ),
   );
@@ -584,7 +678,7 @@ function wo_field_default_fields() {
           'display_label' => 1,
         ),
         'type' => 'options_onoff',
-        'weight' => '2',
+        'weight' => '3',
       ),
     ),
   );
@@ -619,6 +713,11 @@ function wo_field_default_fields() {
           'wo_issue' => 'wo_issue',
           'wo_proposal' => 0,
           'wo_vote' => 0,
+        ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
         ),
       ),
       'translatable' => '1',
@@ -695,6 +794,11 @@ function wo_field_default_fields() {
           'wo_issue' => 0,
           'wo_proposal' => 'wo_proposal',
           'wo_vote' => 0,
+        ),
+        'view' => array(
+          'args' => array(),
+          'display_name' => '',
+          'view_name' => '',
         ),
       ),
       'translatable' => '1',
