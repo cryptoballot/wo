@@ -6,3 +6,12 @@
 
 require_once('wo.features.inc');
 require_once('wo.vote.inc');
+
+/**
+ * Total Voterse
+ * 
+ * Calculate the total number of active votes
+ */
+function wo_total_voters() {
+ return 5;
+}
