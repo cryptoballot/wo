@@ -6,6 +6,23 @@
 
 require_once('wo.features.inc');
 require_once('wo.vote.inc');
+require_once('wo.batch.inc');
+
+/**
+ * Implementation of hook_ctools_plugin_dierctory() to let the system know
+ * we implement plugins.
+ */
+function wo_ctools_plugin_directory($module, $plugin) {
+  return 'plugins/' . $plugin;
+}
+
+function wo_node_insert($node) {
+  if ($node->type == 'wo_vote') wo_vote_updated_created($node);
+}
+
+function wo_node_update($node) {
+  if ($node->type == 'wo_vote') wo_vote_updated_created($node);
+}
 
 /**
  * Total Voterse
@@ -13,5 +30,43 @@ require_once('wo.vote.inc');
  * Calculate the total number of active votes
  */
 function wo_total_voters() {
+ $result = db_query('SELECT COUNT(uid) as count from users WHERE status = 1');
+ dpm($result);
  return 5;
 }
+
+function wo_form_alter(&$form, &$form_state, $form_id) {
+  wo_form_alter_diable_fields($form, $form_state, $form_id);
+  
+  if ($form_id == 'wo_proposal_node_form') {
+    // If no issue is assigned, assign it from the URL
+    if (!isset($form['field_wo_proposal_issue']['und'][0]['nid']['#default_value']) && isset($_GET['issue'])) {
+      //@@TODO: Check the validity of the issue
+      $form['field_wo_proposal_issue']['und'][0]['nid']['#default_value'] = $_GET['issue'];
+    }
+  }
+}
+
+function wo_form_alter_diable_fields(&$form, &$form_state, $form_id) {
+  $disable = array (
+    'wo_proposal' => array('field_wo_proposal_essay_agt','field_wo_proposal_essay_for','field_wo_proposal_issue'),
+    #'wo_issue' => 
+    #'wo_vote' =
+    #'wo_essay'
+  );
+  
+  foreach ($disable as $content_type => $fields) {
+    if ($form_id == $content_type.'_node_form') {
+      foreach ($fields as $field) {
+        $form[$field]['#access'] = FALSE;
+      }
+    }
+  }
+}
+
+function wo_vote_updated_created($vote) {
+  // Recalculate the issue -- eventually this will be done on cron
+  $issue = node_load($vote->field_wo_vote_issue['und'][0]['nid']);
+  wo_batch_update_issue($issue);
+}
+

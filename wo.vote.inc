@@ -3,23 +3,14 @@
  * Calculate Vote
  * 
  * Calculate the votes for a given issue using the ranked-pairs condorcet method
- * See http://en.wikipedia.org/wiki/Ranked_pairs
+ * See http://en.wikipedia.org/wiki/Condorcet_method and http://en.wikipedia.org/wiki/Ranked_pairs
  * 
  * Note that we are implementing the ranked-pairs algorithm for condorcet calculations
  * because it is the simplest to implement. However, it does not scale well and suffers
  * from several other drawbacks. In the future we should look into other condorcet systems.
  */
 function wo_calculate_vote($issue_nid) {
-  // Create a vote array that holds all the votes
-  $votes = array();
-  $votes_db = db_query('SELECT entity_id as nid FROM field_data_field_wo_vote_issue WHERE field_wo_vote_issue_nid = :bid', array(':bid' => $issue_nid));
-  foreach ($votes_db as $vote_db) {
-    $vote_node = node_load($vote_db->nid);
-    $votes[$vote_node->nid] = array();
-    foreach ($vote_node->field_wo_vote_rank['und'] as $item) {
-      $votes[$vote_node->nid][] = $item['nid'];
-    }
-  }
+  $votes = wo_issue_get_votes($issue_nid);
   
   // Create a proposal array that holds all the proposals
   $proposals = array();
@@ -283,4 +274,23 @@ function wo_calculate_vote_consensus($winner, $votes) {
   
   #$scaled_consensus = ..
   return $raw_consensus;
+}
+
+/**
+ * Get votes for an issue
+ * 
+ * Grab the vote nodes and create a compacted representation of the votes for use in other functions
+ */
+function wo_issue_get_votes($issue_nid) {
+  // Create a vote array that holds all the votes
+  $votes = array();
+  $votes_db = db_query('SELECT entity_id as nid FROM field_data_field_wo_vote_issue WHERE field_wo_vote_issue_nid = :bid', array(':bid' => $issue_nid));
+  foreach ($votes_db as $vote_db) {
+    $vote_node = node_load($vote_db->nid);
+    $votes[$vote_node->nid] = array();
+    foreach ($vote_node->field_wo_vote_rank['und'] as $item) {
+      $votes[$vote_node->nid][] = $item['nid'];
+    }
+  }
+  return $votes;
 }
