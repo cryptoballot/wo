@@ -21,7 +21,7 @@ function wo_proposal_essays_render($subtype, $conf, $panel_args, &$context){
     $block->content .= $essay_for->body['und'][0]['safe_summary'];
   }
   else {
-    $block->content .= 'The essay speaking for this proposal has not yet been created. '.l('Create It','node/add/wo-essay/for/'.$proposal->nid);
+    $block->content .= 'The essay speaking <strong>for</strong> this proposal has not yet been created. '.l('Create It','node/add/wo-essay/for/'.$proposal->nid);
   }
   $block->content .= '</div>';
 
@@ -31,7 +31,7 @@ function wo_proposal_essays_render($subtype, $conf, $panel_args, &$context){
     $block->content .= $essay_against->body['und'][0]['safe_summary'];
   }
   else {
-    $block->content .= 'The essay speaking against this proposal has not yet been created. '.l('Create It','node/add/wo-essay/for/'.$proposal->nid);
+    $block->content .= 'The essay speaking <strong>against</strong> this proposal has not yet been created. '.l('Create It','node/add/wo-essay/for/'.$proposal->nid);
   }
   $block->content .= '</div>';
   
