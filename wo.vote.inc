@@ -14,7 +14,7 @@ function wo_calculate_vote($issue_nid) {
   
   // Create a proposal array that holds all the proposals
   $proposals = array();
-  $props_db = db_query('SELECT entity_id as nid FROM field_data_field_wo_proposal_issue WHERE field_wo_proposal_issue_nid = :bid', array(':bid' => $issue_nid));
+  $props_db = db_query('SELECT entity_id as nid FROM field_data_field_wo_proposal_issue WHERE field_wo_proposal_issue_target_id = :bid', array(':bid' => $issue_nid));
   foreach ($props_db as $prop_db) {
     $proposals[] = $prop_db->nid;
   }
@@ -284,7 +284,7 @@ function wo_calculate_vote_consensus($winner, $votes) {
 function wo_issue_get_votes($issue_nid) {
   // Create a vote array that holds all the votes
   $votes = array();
-  $votes_db = db_query('SELECT entity_id as nid FROM field_data_field_wo_vote_issue WHERE field_wo_vote_issue_nid = :bid', array(':bid' => $issue_nid));
+  $votes_db = db_query('SELECT entity_id as nid FROM field_data_field_wo_vote_issue WHERE field_wo_vote_issue_target_id = :bid', array(':bid' => $issue_nid));
   foreach ($votes_db as $vote_db) {
     $vote_node = node_load($vote_db->nid);
     $votes[$vote_node->nid] = array();
