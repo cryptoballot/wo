@@ -33,16 +33,14 @@ function wo_form_alter(&$form, &$form_state, $form_id) {
     if (!$form['field_wo_proposal_issue']['und'][0]['target_id']['#default_value']) {
       
       // Trigger an error if we are missing the issue nid
-      if (!isset($_GET['issue'])) {
+      if (!arg(4)) {
         trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
-        die();
       }
       
       // Load the issue and make sure it's valid
-      $issue = node_load(intval($_GET['issue']));
+      $issue = node_load(intval(arg(4)));
       if ($issue->type != 'wo_issue') {
         trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
-        die;
       }
       
       $form['field_wo_proposal_issue']['und'][0]['target_id']['#default_value'] = $issue->title.' ('.$issue->nid.')';
@@ -55,19 +53,37 @@ function wo_form_alter(&$form, &$form_state, $form_id) {
     if (!$form['field_wo_vote_issue']['und'][0]['target_id']['#default_value']) {
       
       // Trigger an error if we are missing the issue nid
-      if (!isset($_GET['issue'])) {
+      if (!arg(4)) {
         trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
-        die();
       }
       
       // Load the issue and make sure it's valid
-      $issue = node_load(intval($_GET['issue']));
+      $issue = node_load(intval(arg(4)));
       if ($issue->type != 'wo_issue') {
         trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
-        die;
       }
       
       $form['field_wo_vote_issue']['und'][0]['target_id']['#default_value'] = $issue->title.' ('.$issue->nid.')';
+    }
+  }
+
+  // Essay node create and edit form
+  if ($form_id == 'wo_essay_node_form') {
+    // If no issue is assigned, assign it from the URL
+    if (!$form['field_wo_essay_proposal']['und'][0]['target_id']['#default_value']) {
+      
+      // Trigger an error if we are missing the issue nid
+      if (!arg(4)) {
+        trigger_error('Bad Form State - missing proposal nid',E_USER_ERROR);
+      }
+      
+      // Load the issue and make sure it's valid
+      $proposal = node_load(intval(arg(4)));
+      if ($proposal->type != 'wo_proposal') {
+        trigger_error('Bad Form State - missing proposal nid',E_USER_ERROR);
+      }
+      
+      $form['field_wo_essay_proposal']['und'][0]['target_id']['#default_value'] = $proposal->title.' ('.$proposal->nid.')';
     }
   }
 }
@@ -76,8 +92,8 @@ function wo_form_alter_diable_fields(&$form, &$form_state, $form_id) {
   $disable = array (
     'wo_proposal' => array('field_wo_proposal_essay_agt','field_wo_proposal_essay_for','field_wo_proposal_issue'),
     'wo_issue' => array('field_wo_issue_consensus','field_wo_issue_proposals'),
-    #'wo_vote' =
-    #'wo_essay'
+    'wo_vote' => array('field_wo_vote_issue'), 
+    'wo_essay' => array('field_wo_essay_proposal'), 
   );
   
   foreach ($disable as $content_type => $fields) {
@@ -91,7 +107,7 @@ function wo_form_alter_diable_fields(&$form, &$form_state, $form_id) {
 
 function wo_vote_updated_created($vote) {
   // Recalculate the issue -- eventually this will be done on cron
-  $issue = node_load($vote->field_wo_vote_issue['und'][0]['nid']);
+  $issue = node_load($vote->field_wo_vote_issue['und'][0]['target_id']);
   wo_batch_update_issue($issue);
 }
 

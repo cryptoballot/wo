@@ -19,6 +19,16 @@ function wo_calculate_vote($issue_nid) {
     $proposals[] = $prop_db->nid;
   }
   
+  // Special-case: If there is only one proposal, return it as the winner
+  if (count($proposals) == 1) {
+    $proposal = $proposals[0];
+    return array(
+      'winner' => $proposal,
+      'list' => array($proposal),
+      'consensus' => wo_calculate_vote_consensus($proposal, $votes),
+    );
+  }
+  
   // Ranked-pairs Step 1: Tally
   // For-each proposal pair, determine who the winner is, and by what amount
   $tally = array();
@@ -169,7 +179,7 @@ function wo_calculate_vote_find_pseudo_winner($graph, $node = FALSE) {
   if (!$node) {
     $node = array_pop($graph);
   }
-  
+    
   foreach ($node['parents'] as $parent) {
     if (isset($graph[$parent])) {
       unset($graph[$parent]);
@@ -253,7 +263,7 @@ function wo_calculate_vote_create_list_walk(&$graph, &$list, $prop) {
  * the consensus ratio would be 1
  */
 function wo_calculate_vote_consensus($winner, $votes) {
-  $voter_turnout = wo_total_voters() / count($votes);
+  $voter_turnout = count($votes) / wo_total_voters();
   
   $sum = 0;
   foreach ($votes as $vote) {
@@ -289,7 +299,7 @@ function wo_issue_get_votes($issue_nid) {
     $vote_node = node_load($vote_db->nid);
     $votes[$vote_node->nid] = array();
     foreach ($vote_node->field_wo_vote_rank['und'] as $item) {
-      $votes[$vote_node->nid][] = $item['nid'];
+      $votes[$vote_node->nid][] = $item['target_id'];
     }
   }
   return $votes;
