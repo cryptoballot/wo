@@ -1063,7 +1063,7 @@ function wo_field_default_fields() {
       'entity_type' => 'node',
       'field_name' => 'field_wo_vote_issue',
       'label' => 'Issue',
-      'required' => 0,
+      'required' => 1,
       'settings' => array(
         'user_register_form' => FALSE,
       ),
@@ -1141,7 +1141,7 @@ function wo_field_default_fields() {
       'entity_type' => 'node',
       'field_name' => 'field_wo_vote_rank',
       'label' => 'Ranked Proposals',
-      'required' => 0,
+      'required' => 1,
       'settings' => array(
         'user_register_form' => FALSE,
       ),
