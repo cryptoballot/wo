@@ -24,33 +24,48 @@ function wo_node_update($node) {
   if ($node->type == 'wo_vote') wo_vote_updated_created($node);
 }
 
-/**
- * Total Voterse
- * 
- * Calculate the total number of active votes
- */
-function wo_total_voters() {
- $result = db_query('SELECT COUNT(uid) as count from users WHERE status = 1');
- dpm($result);
- return 5;
-}
-
 function wo_form_alter(&$form, &$form_state, $form_id) {
   wo_form_alter_diable_fields($form, $form_state, $form_id);
   
+  // Proposal node create and edit form
   if ($form_id == 'wo_proposal_node_form') {
+    
     // If no issue is assigned, assign it from the URL
-    if (!isset($form['field_wo_proposal_issue']['und'][0]['nid']['#default_value']) && isset($_GET['issue'])) {
+    if (!isset($form['field_wo_proposal_issue']['und'][0]['nid']['#default_value'])) {
+      
+      // Trigger an error if we are missing the issue nid
+      if (!isset($_GET['issue'])) trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
+      
       //@@TODO: Check the validity of the issue
       $form['field_wo_proposal_issue']['und'][0]['nid']['#default_value'] = $_GET['issue'];
     }
+    
+    // If an issue is already assigned, don't let it be changed
+    else $form['field_wo_proposal_issue']['#access'] = FALSE;
+  }
+
+  // Vote node create and edit form
+  if ($form_id == 'wo_vote_node_form') {
+    
+    // If no issue is assigned, assign it from the URL
+    if (!isset($form['field_wo_vote_issue']['und'][0]['nid']['#default_value'])) {
+      
+      // Trigger an error if we are missing the issue nid
+      if (!isset($_GET['issue'])) trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
+      
+      //@@TODO: Check the validity of the issue
+      $form['field_wo_vote_issue']['und'][0]['nid']['#default_value'] = $_GET['issue'];
+    }
+    
+    // If an issue is already assigned, don't let it be changed
+    else $form['field_wo_vote_issue']['#access'] = FALSE;
   }
 }
 
 function wo_form_alter_diable_fields(&$form, &$form_state, $form_id) {
   $disable = array (
     'wo_proposal' => array('field_wo_proposal_essay_agt','field_wo_proposal_essay_for','field_wo_proposal_issue'),
-    #'wo_issue' => 
+    'wo_issue' => array('field_wo_issue_consensus','field_wo_issue_proposals'),
     #'wo_vote' =
     #'wo_essay'
   );

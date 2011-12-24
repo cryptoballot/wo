@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_field_default_fields().
+ * Implements hook_field_default_fields().
  */
 function wo_field_default_fields() {
   $fields = array();
@@ -27,8 +27,8 @@ function wo_field_default_fields() {
       'module' => 'list',
       'settings' => array(
         'allowed_values' => array(
-          'edit' => 'Edit Content',
           'full' => 'Full Control',
+          'edit' => 'Edit Content',
           'manage' => 'Manage Users',
         ),
         'allowed_values_function' => '',
@@ -75,36 +75,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_proposal_owners_user',
-      'foreign keys' => array(
-        'uid' => array(
-          'columns' => array(
-            'uid' => 'uid',
-          ),
-          'table' => 'users',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'uid' => array(
-          0 => 'uid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'user_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_roles' => array(
-          2 => '2',
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'none',
+            'property' => 'uid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'user' => 'user',
+          ),
         ),
-        'referenceable_status' => array(
-          0 => 0,
-          1 => '1',
-        ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'user',
       ),
       'translatable' => '0',
-      'type' => 'user_reference',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'field_proposal_owners',
@@ -114,10 +110,12 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'user_reference',
-          'settings' => array(),
-          'type' => 'user_reference_default',
-          'weight' => 0,
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
+          'weight' => 2,
         ),
       ),
       'entity_type' => 'field_collection_item',
@@ -129,14 +127,14 @@ function wo_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'user_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'user_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'user_reference_autocomplete',
-        'weight' => '1',
+        'type' => 'entityreference_autocomplete',
+        'weight' => '3',
       ),
     ),
   );
@@ -222,36 +220,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_wo_essay_proposal',
-      'foreign keys' => array(
-        'nid' => array(
-          'columns' => array(
-            'nid' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'nid' => array(
-          0 => 'nid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_types' => array(
-          'article' => 0,
-          'page' => 0,
-          'wo_essay' => 0,
-          'wo_issue' => 0,
-          'wo_proposal' => 'wo_proposal',
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'body:value',
+            'property' => 'nid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'wo_proposal' => 'wo_proposal',
+          ),
         ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'node',
       ),
-      'translatable' => '1',
-      'type' => 'node_reference',
+      'translatable' => '0',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'wo_essay',
@@ -261,9 +255,11 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'node_reference',
-          'settings' => array(),
-          'type' => 'node_reference_default',
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
           'weight' => 2,
         ),
         'teaser' => array(
@@ -282,13 +278,13 @@ function wo_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'node_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'node_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'node_reference_autocomplete',
+        'type' => 'entityreference_autocomplete',
         'weight' => '-2',
       ),
     ),
@@ -500,35 +496,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_wo_issue_proposals',
-      'foreign keys' => array(
-        'nid' => array(
-          'columns' => array(
-            'nid' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'nid' => array(
-          0 => 'nid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_types' => array(
-          'wo_essay' => 0,
-          'wo_issue' => 0,
-          'wo_proposal' => 'wo_proposal',
-          'wo_vote' => 0,
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'body:value',
+            'property' => 'nid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'wo_proposal' => 'wo_proposal',
+          ),
         ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'node',
       ),
       'translatable' => '0',
-      'type' => 'node_reference',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'wo_issue',
@@ -538,9 +531,11 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'node_reference',
-          'settings' => array(),
-          'type' => 'node_reference_default',
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
           'weight' => 2,
         ),
         'teaser' => array(
@@ -559,13 +554,13 @@ function wo_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'node_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'node_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'node_reference_autocomplete',
+        'type' => 'entityreference_autocomplete',
         'weight' => '-2',
       ),
     ),
@@ -638,7 +633,7 @@ function wo_field_default_fields() {
           'summary_rows' => 5,
         ),
         'type' => 'text_textarea_with_summary',
-        'weight' => '2',
+        'weight' => '1',
       ),
       'widget_type' => 'text_textarea_with_summary',
     ),
@@ -698,7 +693,7 @@ function wo_field_default_fields() {
         'module' => 'field_collection',
         'settings' => array(),
         'type' => 'field_collection_hidden',
-        'weight' => '8',
+        'weight' => '6',
       ),
     ),
   );
@@ -711,37 +706,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_wo_proposal_essay_agt',
-      'foreign keys' => array(
-        'nid' => array(
-          'columns' => array(
-            'nid' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'nid' => array(
-          0 => 'nid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_types' => array(
-          'article' => 0,
-          'page' => 0,
-          'wo_essay' => 'wo_essay',
-          'wo_issue' => 0,
-          'wo_proposal' => 0,
-          'wo_vote' => 0,
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'body:value',
+            'property' => 'nid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'wo_essay' => 'wo_essay',
+          ),
         ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'node',
       ),
-      'translatable' => '1',
-      'type' => 'node_reference',
+      'translatable' => '0',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'wo_proposal',
@@ -751,10 +741,12 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'node_reference',
-          'settings' => array(),
-          'type' => 'node_reference_default',
-          'weight' => 2,
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
+          'weight' => 9,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -772,13 +764,13 @@ function wo_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'node_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'node_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'node_reference_autocomplete',
+        'type' => 'entityreference_autocomplete',
         'weight' => '5',
       ),
     ),
@@ -792,37 +784,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_wo_proposal_essay_for',
-      'foreign keys' => array(
-        'nid' => array(
-          'columns' => array(
-            'nid' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'nid' => array(
-          0 => 'nid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_types' => array(
-          'article' => 0,
-          'page' => 0,
-          'wo_essay' => 'wo_essay',
-          'wo_issue' => 0,
-          'wo_proposal' => 0,
-          'wo_vote' => 0,
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'body:value',
+            'property' => 'nid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'wo_essay' => 'wo_essay',
+          ),
         ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'node',
       ),
-      'translatable' => '1',
-      'type' => 'node_reference',
+      'translatable' => '0',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'wo_proposal',
@@ -832,10 +819,12 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'node_reference',
-          'settings' => array(),
-          'type' => 'node_reference_default',
-          'weight' => 1,
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
+          'weight' => 8,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -853,13 +842,13 @@ function wo_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'node_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'node_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'node_reference_autocomplete',
+        'type' => 'entityreference_autocomplete',
         'weight' => '4',
       ),
     ),
@@ -873,35 +862,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_wo_proposal_issue',
-      'foreign keys' => array(
-        'nid' => array(
-          'columns' => array(
-            'nid' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'nid' => array(
-          0 => 'nid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_types' => array(
-          'wo_essay' => 0,
-          'wo_issue' => 'wo_issue',
-          'wo_proposal' => 0,
-          'wo_vote' => 0,
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'body:value',
+            'property' => 'nid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'wo_issue' => 'wo_issue',
+          ),
         ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'node',
       ),
       'translatable' => '0',
-      'type' => 'node_reference',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'wo_proposal',
@@ -911,10 +897,12 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'node_reference',
-          'settings' => array(),
-          'type' => 'node_reference_default',
-          'weight' => 4,
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
+          'weight' => 7,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -932,14 +920,14 @@ function wo_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'node_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'node_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'node_reference_autocomplete',
-        'weight' => '1',
+        'type' => 'entityreference_autocomplete',
+        'weight' => '2',
       ),
     ),
   );
@@ -1023,37 +1011,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_wo_vote_issue',
-      'foreign keys' => array(
-        'nid' => array(
-          'columns' => array(
-            'nid' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'nid' => array(
-          0 => 'nid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_types' => array(
-          'article' => 0,
-          'page' => 0,
-          'wo_essay' => 0,
-          'wo_issue' => 'wo_issue',
-          'wo_proposal' => 0,
-          'wo_vote' => 0,
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'body:value',
+            'property' => 'nid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'wo_issue' => 'wo_issue',
+          ),
         ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'node',
       ),
-      'translatable' => '1',
-      'type' => 'node_reference',
+      'translatable' => '0',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'wo_vote',
@@ -1063,10 +1046,12 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'node_reference',
-          'settings' => array(),
-          'type' => 'node_reference_default',
-          'weight' => 0,
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
+          'weight' => 2,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -1084,14 +1069,14 @@ function wo_field_default_fields() {
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'node_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'node_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'node_reference_autocomplete',
-        'weight' => '-4',
+        'type' => 'entityreference_autocomplete',
+        'weight' => '-2',
       ),
     ),
   );
@@ -1104,37 +1089,32 @@ function wo_field_default_fields() {
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_wo_vote_rank',
-      'foreign keys' => array(
-        'nid' => array(
-          'columns' => array(
-            'nid' => 'nid',
-          ),
-          'table' => 'node',
-        ),
-      ),
+      'foreign keys' => array(),
       'indexes' => array(
-        'nid' => array(
-          0 => 'nid',
+        'target_entity' => array(
+          0 => 'target_type',
+          1 => 'target_id',
         ),
       ),
-      'module' => 'node_reference',
+      'module' => 'entityreference',
       'settings' => array(
-        'referenceable_types' => array(
-          'article' => 0,
-          'page' => 0,
-          'wo_essay' => 0,
-          'wo_issue' => 0,
-          'wo_proposal' => 'wo_proposal',
-          'wo_vote' => 0,
+        'handler' => 'base',
+        'handler_settings' => array(
+          'sort' => array(
+            'direction' => 'ASC',
+            'field' => 'body:value',
+            'property' => 'nid',
+            'type' => 'none',
+          ),
+          'target_bundles' => array(
+            'wo_proposal' => 'wo_proposal',
+          ),
         ),
-        'view' => array(
-          'args' => array(),
-          'display_name' => '',
-          'view_name' => '',
-        ),
+        'handler_submit' => 'Change handler',
+        'target_type' => 'node',
       ),
-      'translatable' => '1',
-      'type' => 'node_reference',
+      'translatable' => '0',
+      'type' => 'entityreference',
     ),
     'field_instance' => array(
       'bundle' => 'wo_vote',
@@ -1144,10 +1124,12 @@ function wo_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'node_reference',
-          'settings' => array(),
-          'type' => 'node_reference_default',
-          'weight' => 1,
+          'module' => 'entityreference',
+          'settings' => array(
+            'link' => FALSE,
+          ),
+          'type' => 'entityreference_label',
+          'weight' => 3,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -1158,21 +1140,21 @@ function wo_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_wo_vote_rank',
-      'label' => 'Rank proposals',
-      'required' => 1,
+      'label' => 'Ranked Proposals',
+      'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
       ),
       'widget' => array(
         'active' => 1,
-        'module' => 'node_reference',
+        'module' => 'entityreference',
         'settings' => array(
-          'autocomplete_match' => 'contains',
-          'autocomplete_path' => 'node_reference/autocomplete',
+          'match_operator' => 'CONTAINS',
+          'path' => '',
           'size' => '60',
         ),
-        'type' => 'node_reference_autocomplete',
-        'weight' => '-3',
+        'type' => 'entityreference_autocomplete',
+        'weight' => '-1',
       ),
     ),
   );
@@ -1188,7 +1170,6 @@ function wo_field_default_fields() {
   t('Owners');
   t('Permissions');
   t('Proposal');
-  t('Rank proposals');
   t('Ranked Proposals');
   t('Tentative');
   t('Type');

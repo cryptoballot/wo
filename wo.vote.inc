@@ -294,3 +294,14 @@ function wo_issue_get_votes($issue_nid) {
   }
   return $votes;
 }
+
+/**
+ * Total Voters
+ * 
+ * Calculate the total number of active votes
+ */
+function wo_total_voters() {
+  //@@TODO: Return the proper amount
+  $result = db_query('SELECT COUNT(uid) as count from users WHERE status = 1');
+  return 5;
+}
