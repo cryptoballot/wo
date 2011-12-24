@@ -311,7 +311,7 @@ function wo_issue_get_votes($issue_nid) {
  * Calculate the total number of active votes
  */
 function wo_total_voters() {
-  //@@TODO: Return the proper amount
-  $result = db_query('SELECT COUNT(uid) as count from users WHERE status = 1');
-  return 5;
+  //@@TODO: Return the proper amount based on role
+  $result = db_query('SELECT COUNT(uid) as count from users WHERE status = 1')->fetchField();
+  return $result['count'];
 }
