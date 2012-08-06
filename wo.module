@@ -33,14 +33,16 @@ function wo_form_alter(&$form, &$form_state, $form_id) {
     if (!$form['field_wo_proposal_issue']['und'][0]['target_id']['#default_value']) {
       
       // Trigger an error if we are missing the issue nid
-      if (!arg(4)) {
-        trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
+      if (!arg(3)) {
+        trigger_error('Bad Form State - missing issue nid', E_USER_ERROR);
+        drupal_not_found();
       }
       
       // Load the issue and make sure it's valid
-      $issue = node_load(intval(arg(4)));
+      $issue = node_load(intval(arg(3)));
       if ($issue->type != 'wo_issue') {
-        trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
+        trigger_error('Bad Form State - missing issue nid', E_USER_ERROR);
+        drupal_not_found();
       }
       
       $form['field_wo_proposal_issue']['und'][0]['target_id']['#default_value'] = $issue->title.' ('.$issue->nid.')';
@@ -53,14 +55,16 @@ function wo_form_alter(&$form, &$form_state, $form_id) {
     if (!$form['field_wo_vote_issue']['und'][0]['target_id']['#default_value']) {
       
       // Trigger an error if we are missing the issue nid
-      if (!arg(4)) {
-        trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
+      if (!arg(3)) {
+        trigger_error('Bad Form State - missing issue nid', E_USER_ERROR);
+        drupal_not_found();
       }
       
       // Load the issue and make sure it's valid
-      $issue = node_load(intval(arg(4)));
+      $issue = node_load(intval(arg(3)));
       if ($issue->type != 'wo_issue') {
-        trigger_error('Bad Form State - missing issue nid',E_USER_ERROR);
+        trigger_error('Bad Form State - missing issue nid', E_USER_ERROR);
+        drupal_not_found();
       }
       
       $form['field_wo_vote_issue']['und'][0]['target_id']['#default_value'] = $issue->title.' ('.$issue->nid.')';
@@ -73,14 +77,16 @@ function wo_form_alter(&$form, &$form_state, $form_id) {
     if (!$form['field_wo_essay_proposal']['und'][0]['target_id']['#default_value']) {
       
       // Trigger an error if we are missing the issue nid
-      if (!arg(4)) {
-        trigger_error('Bad Form State - missing proposal nid',E_USER_ERROR);
+      if (!arg(3)) {
+        trigger_error('Bad Form State - missing proposal nid', E_USER_ERROR);
+        drupal_not_found();
       }
       
       // Load the issue and make sure it's valid
       $proposal = node_load(intval(arg(4)));
       if ($proposal->type != 'wo_proposal') {
-        trigger_error('Bad Form State - missing proposal nid',E_USER_ERROR);
+        trigger_error('Bad Form State - missing proposal nid', E_USER_ERROR);
+        drupal_not_found();
       }
       
       $form['field_wo_essay_proposal']['und'][0]['target_id']['#default_value'] = $proposal->title.' ('.$proposal->nid.')';
