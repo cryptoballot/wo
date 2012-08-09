@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Wikiocracy - Entity Pages feature.
+ */
+
+include_once 'wo_entity_pages.features.inc';
