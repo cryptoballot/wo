@@ -288,7 +288,7 @@ function wo_field_default_fields() {
         'module' => 'number',
         'settings' => array(),
         'type' => 'number',
-        'weight' => '-4',
+        'weight' => '1',
       ),
     ),
   );
@@ -355,7 +355,7 @@ function wo_field_default_fields() {
           'rows' => '10',
         ),
         'type' => 'text_textarea',
-        'weight' => '-2',
+        'weight' => '4',
       ),
     ),
   );
@@ -388,7 +388,7 @@ function wo_field_default_fields() {
         'handler_settings' => array(
           'sort' => array(
             'direction' => 'ASC',
-            'field' => 'body:value',
+            'field' => 'field_wo_essay_body:value',
             'property' => 'nid',
             'type' => 'none',
           ),
@@ -426,7 +426,7 @@ function wo_field_default_fields() {
       ),
       'entity_type' => 'node',
       'field_name' => 'field_wo_issue_proposals',
-      'label' => 'Proposals',
+      'label' => 'Ranked Proposals',
       'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
@@ -440,7 +440,76 @@ function wo_field_default_fields() {
           'size' => '60',
         ),
         'type' => 'entityreference_autocomplete',
-        'weight' => '-3',
+        'weight' => '3',
+      ),
+    ),
+  );
+
+  // Exported field: 'node-wo_issue-field_wo_issue_transitive'.
+  $fields['node-wo_issue-field_wo_issue_transitive'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_wo_issue_transitive',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          0 => 'Not Transitive',
+          1 => 'Transitive',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_boolean',
+    ),
+    'field_instance' => array(
+      'bundle' => 'wo_issue',
+      'default_value' => array(
+        0 => array(
+          'value' => 0,
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 3,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_wo_issue_transitive',
+      'label' => 'Transitive',
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(
+          'display_label' => 0,
+        ),
+        'type' => 'options_onoff',
+        'weight' => '2',
       ),
     ),
   );
@@ -949,7 +1018,7 @@ function wo_field_default_fields() {
         'handler_settings' => array(
           'sort' => array(
             'direction' => 'ASC',
-            'field' => 'body:value',
+            'field' => 'field_wo_essay_body:value',
             'property' => 'nid',
             'type' => 'none',
           ),
@@ -993,14 +1062,10 @@ function wo_field_default_fields() {
         'user_register_form' => FALSE,
       ),
       'widget' => array(
-        'active' => 1,
-        'module' => 'entityreference',
-        'settings' => array(
-          'match_operator' => 'CONTAINS',
-          'path' => '',
-          'size' => '60',
-        ),
-        'type' => 'entityreference_autocomplete',
+        'active' => 0,
+        'module' => 'entityreference_dragdrop',
+        'settings' => array(),
+        'type' => 'entityreference_dragdrop',
         'weight' => '-2',
       ),
     ),
@@ -1016,9 +1081,9 @@ function wo_field_default_fields() {
   t('Issue');
   t('Leave this checked to initially post this as a tentative proposal. Use this time to invite other participants to edit the proposal, develop the for and against essays, and gather support. While your proposal is marked as tentative it can not be voted on. Once you are happy with your tentative proposal, you can  graduate it to full proposal status.');
   t('Proposal');
-  t('Proposals');
   t('Ranked Proposals');
   t('Tentative');
+  t('Transitive');
   t('Type');
 
   return $fields;
