@@ -1,0 +1,60 @@
+
+
+
+.wo-issue-preview {
+  border: 1px solid lightgrey;
+  padding: 10px;
+}
+
+.wo-issue-preview .top-bar {
+  border-bottom: 1px solid lightgrey;
+  padding: 10px;
+  height: 30px;
+}
+
+.wo-issue-preview .top-bar h2{
+  margin: 0px;
+  float: left;
+}
+
+.wo-issue-preview .top-bar .votes {
+  float: left;
+  margin-left: 20px;
+  padding: 2px 6px 2px 6px;
+  border: 1px solid grey;
+  background-color: lightgrey;
+}
+
+.wo-issue-preview .top-bar .consensus {
+  float: left;
+  margin-left: 20px;
+  padding: 2px 6px 2px 6px;
+}
+
+.wo-issue-preview .top-bar .consensus.transitive {
+  border: 1px solid darkgreen;
+  background-color: green;
+}
+
+.wo-issue-preview .top-bar .consensus.not-transitive {
+  border: 1px solid red;
+  background-color: pink;
+}
+
+.wo-issue-preview .top-bar .vote-button {
+  float: left;
+  margin-left: 20px;
+  padding: 2px 6px 2px 6px;
+  background-color: lightblue;
+}
+
+.wo-issue-preview .top-bar .new-proposal-button {
+  float:left;
+  margin-left: 20px;
+  padding: 2px 6px 2px 6px;
+  background-color: lightblue;
+}
+
+.wo-issue-preview .description {
+  padding: 20px;
+}

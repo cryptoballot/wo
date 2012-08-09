@@ -8,6 +8,11 @@ require_once('wo.features.inc');
 require_once('wo.vote.inc');
 require_once('wo.batch.inc');
 
+// Add css
+function wo_init() {
+  drupal_add_css(drupal_get_path('module', 'wo') . '/wo.css');
+}
+
 /**
  * Implementation of hook_ctools_plugin_dierctory() to let the system know
  * we implement plugins.
