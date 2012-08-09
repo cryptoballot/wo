@@ -8,12 +8,14 @@
  * Note that we are implementing the ranked-pairs algorithm for condorcet calculations
  * because it is the simplest to implement. However, it does not scale well and suffers
  * from several other drawbacks. In the future we should look into other condorcet systems.
+ * @@TODO: Move this to a go, D, or erlang service. Hadoop?
  */
 function wo_calculate_vote($issue_nid) {
   $votes = wo_issue_get_votes($issue_nid);
   
   // Create a proposal array that holds all the proposals
   $proposals = array();
+  //@@TODO: Entity-field query
   $props_db = db_query('SELECT entity_id as nid FROM field_data_field_wo_proposal_issue WHERE field_wo_proposal_issue_target_id = :bid', array(':bid' => $issue_nid));
   foreach ($props_db as $prop_db) {
     $proposals[] = $prop_db->nid;
@@ -56,12 +58,12 @@ function wo_calculate_vote($issue_nid) {
       foreach ($votes as $vote) {
         foreach ($vote as $item) {
           if ($item == $prop_a) {
-            $pair['prefer_a'] = $pair['prefer_a'] + 1;
-            continue;
+            $pair['prefer_a']++;
+            break;
           }
           if ($item == $prop_b) {
-            $pair['prefer_b'] = $pair['prefer_b'] + 1;
-            continue;
+            $pair['prefer_b']++;
+            break;
           }
         }
       }
@@ -92,16 +94,20 @@ function wo_calculate_vote($issue_nid) {
   // Ranked-pairs Step 2: Graph
   $graph = array();
   foreach ($tally as $pair) {
-    foreach ($pair['props'] as $prop) {
+    foreach ($pair['props'] as $prop_key => $prop) {
       // If this proposition hasn't been seen in the graph before, set it up 
       if (!isset($graph[$prop])) {
         $graph[$prop] = array(
           'prop' => $prop,
           'parents' => array(),
           'children' => array(),
+          'siblings' => array(),
         );
       }
-      // Set the parent / child relationship in the graph based on winner / loser in the pair
+      // Set the parent / child / sibling relationship in the graph based on winner / loser in the pair
+      if ($pair['winner'] === FALSE) {
+        $graph[$prop]['siblings'][] = $pair['props'][($prop_key == 'a' ? 'b' : 'a')];
+      }
       if ($pair['winner'] == $prop) {
         $graph[$prop]['children'][] = $pair['loser'];
       }
@@ -111,11 +117,12 @@ function wo_calculate_vote($issue_nid) {
     }
   }
   
-  // Compile the results (winner, ranked list, consensus ratio)
+  // Compile the results (winner, ranked list, consensus ratio, and graph)
   $results = array(
     'winner' => FALSE,
     'list' => array(),
     'consensus' => 0,
+    'graph' => $graph,
   );
   
   // Calculate the winner. If there is no winner it implies that there is no transitive proposal
@@ -138,6 +145,7 @@ function wo_calculate_vote($issue_nid) {
   // Uncomment this to debug
   #dpm($votes);
   #dpm($tally);
+  #dpm($winner);
   #dpm($graph); 
   
   return $results;
@@ -150,7 +158,7 @@ function wo_calculate_vote($issue_nid) {
  * usort() callback. Properly ranks pairs
  */
 function wo_calculate_vote_rank_pairs($pair_a, $pair_b) {
-  return ($pair_b['amount'] - $pair_a['amount']);
+  return ($pair_a['amount'] - $pair_b['amount']);
 }
 
 /**
@@ -160,7 +168,15 @@ function wo_calculate_vote_rank_pairs($pair_a, $pair_b) {
  */
 function wo_calculate_vote_find_winner($graph) {
   foreach ($graph as $node) {
-    if (empty($node['parents'])) return $node['prop'];
+    if (empty($node['parents'])) {
+      if (empty($node['siblings'])) {
+        return $node['prop'];
+      }
+      else {
+        // The winner has siblings, therefore non-transitive
+        return FALSE;
+      }
+    }
   }
 }
 
@@ -179,16 +195,23 @@ function wo_calculate_vote_find_pseudo_winner($graph, $node = FALSE) {
   if (!$node) {
     $node = array_pop($graph);
   }
-    
-  foreach ($node['parents'] as $parent) {
-    if (isset($graph[$parent])) {
-      unset($graph[$parent]);
-      return wo_calculate_vote_find_pseudo_winner($graph, $parent);
+
+  if (empty($node['parents'])) {
+    //@@TODO: There might be more work here to check siblings
+    // We should be returning the sibling with the highest number of children
+    // If they have the same number of children, then the highest number of vote-diff
+    return $node['prop'];
+  }
+  else {
+    // Walk up the tree by just transversing via the parents
+    foreach ($node['parents'] as $pid) {
+      if (isset($graph[$pid])) {
+        $parent = $graph[$pid];
+        unset($graph[$pid]);
+        return wo_calculate_vote_find_pseudo_winner($graph, $parent);
+      }
     }
   }
-  
-  // This node has no parent that hasn't already been processed, which means it is the pseudo-winner. Return it
-  return $node;
 }
 
 /**
@@ -215,24 +238,31 @@ function wo_calculate_vote_create_list($graph, $winner) {
  * Callback function to walk the graph and create the list
  */
 function wo_calculate_vote_create_list_walk(&$graph, &$list, $prop) {
-  // If this node is not in the graph, just return FALSE
-  if (!isset($graph[$prop])) return FALSE;
-  
+  // If this node is not in the graph, skip it
+  if (!isset($graph[$prop])) return;
+
+  // Add the node to the list
+  $list[] = $prop; 
+
   // Grab the node from the graph
   $node = $graph[$prop];
   
-  // Unset the node, marking it as processed, and add it to the list
+  // Unset the node, marking it as processed
   unset($graph[$prop]);
-  $list[] = $prop;
-  
-  // First walk parents, then walk children
+
+  // Walk the graph. First walk parents, then siblings, then children
+
   // Generally there will be no valid parents, but there sometimes will be if there
   // is a circular reference in the graph. This ensures we clear out all circular references
   foreach ($node['parents'] as $parent) {
-    if (isset($graph[$parent])) {
-      wo_calculate_vote_create_list_walk($graph, $list, $parent);
-    }
+    wo_calculate_vote_create_list_walk($graph, $list, $parent);
   }
+
+  // Siblings
+  foreach ($node['siblings'] as $sib) {
+    wo_calculate_vote_create_list_walk($graph, $list, $sib);
+  }
+
   // For the children, only process the children that have no unprocessed parents, this
   // ensures that a child is only processed after all parents are processed
   foreach ($node['children'] as $child) {
@@ -261,6 +291,8 @@ function wo_calculate_vote_create_list_walk(&$graph, &$list, $prop) {
  * 
  * If every eligible voter has voted and ranked the winner as their first preference, then
  * the consensus ratio would be 1
+ * 
+ * If there are no votes, then the consensus ratio is 0. Equally, a circular 
  */
 function wo_calculate_vote_consensus($winner, $votes) {
   $voter_turnout = count($votes) / wo_total_voters();
@@ -282,8 +314,8 @@ function wo_calculate_vote_consensus($winner, $votes) {
   
   $raw_consensus = $voter_turnout * $inverse_average;
   
-  #$scaled_consensus = ..
-  return $raw_consensus;
+  #$scaled_consensus = .. // Balance voter-turnout vs. inverse average
+  return $inverse_average;
 }
 
 /**
