@@ -18,7 +18,7 @@ function wo_issue_proposals_ranked_render($subtype, $conf, $panel_args, &$contex
   foreach ($node->field_wo_issue_proposals['und'] as $item) {
     $proposal = node_load($item['target_id']);
     $block->content .= '<div class="proposal">';
-    $block->content .= '<h3>' . $proposal->title . '</h3>';
+    $block->content .= '<h3>' . l($proposal->title, 'node/' . $proposal->nid) . '</h3>';
     $block->content .= '<div class="body">' . $proposal->field_wo_proposal_body['und'][0]['safe_value'] . '</div>';
     $block->content .= '<div class="learnmore">' . l('Learn More', 'node/' . $proposal->nid) . '</div>';
     $block->content .= '</div>';
